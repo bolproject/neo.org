@@ -1,0 +1,27 @@
+﻿@model NeoWeb.Models.FwLink
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="p1">
+    <h1 class="w800">Create FwLink</h1>
+</div>
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label class="control-label" for="Link">Link</label>
+        <input asp-for="Link" class="form-control" />
+        <span asp-validation-for="Link" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="my-4">
+        <input type="submit" value="Create" class="btn" />
+    </div>
+    <div class="my-4">
+        <a asp-controller="fwlink" asp-action="list">Back to List</a>
+    </div>
+</form>

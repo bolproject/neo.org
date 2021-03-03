@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NeoWeb.Models;
 
 namespace NeoWeb.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -17,20 +16,20 @@ namespace NeoWeb.Data
 
         public DbSet<Blog> Blogs { get; set; }
 
-        public DbSet<Testnet> Testnets { get; set; }
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<TestCoin> TestCoins { get; set; }
 
         public DbSet<News> News { get; set; }
 
-        public DbSet<ICO1> ICO1 { get; set; }
+        public DbSet<Event> Events { get; set; }
 
-        public DbSet<ICO2> ICO2 { get; set; }
+        public DbSet<Candidate> Candidates { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
-        }
+        public DbSet<Subscription> Subscription { get; set; }
+
+        public DbSet<FwLink> FwLink { get; set; }
+        public DbSet<Top> Top { get; set; }
+        public DbSet<Job> Careers { get; set; }
     }
 }

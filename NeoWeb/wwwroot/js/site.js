@@ -1,36 +1,53 @@
-﻿function resize() {
-    for (var i = 0; i < 10 && $("#menu_list").width() + $("#logo_div").width() > $("#nav_container").width(); i++) {
-        $("#dropdown_btn").show();
-        $("#more_list").prepend($(".nav-item:last"));
-        $(".nav-item:last").removeClass("nav-item");
-    }
-    if ($("#menu_list").width() + $("#logo_div").width() + 100 <= $("#nav_container").width()) {
-        var preShowItem = $("#more_list li:first");
-        $("#dropdown_btn").before(preShowItem);
-        preShowItem.addClass("nav-item");
-        if ($("#more_list li").length == 0) {
-            $("#dropdown_btn").hide();
-        }
-    }
+﻿//多语言切换
+function setLanguage(culture) {
+    $("#culture").val(culture);
+    $("#returnUrl").val(window.location.pathname);
+    $("#form_language").submit();
 }
-resize();
-$(window).bind('resize', resize);
+//懒加载
+$('[data-original]').lazyload({
+    threshold: 400,
+    effect: "fadeIn"
+});
+//导航栏的叉叉按钮
+$('.special-button').click(function () {
 
-var _hmt = _hmt || [];
-(function () {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?89c4ec96535ab0e5578edff466ccb91a";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
+    if ($('.bottom').hasClass('active')) {
+        $(".st0").attr("class", "st0");
+    }
 
-function language(lang) {
-    var rgExp = /\w{2}-\w{2}/;
+    else {
+        $(".st0").attr("class", "st0 active");
+    }
 
-    if (rgExp.exec(location.href)) {
-        location.href = location.href.replace(rgExp, lang);
+    $('.top').toggleClass("active");
+    $('.bottom').toggleClass("active");
+});
+//导航的栏折叠展开
+$(".navbar-toggler").click(function () {
+    if ($(".navbar-collapse").hasClass("show")) {
+        $(".navbar-collapse").removeClass("show");
+        $(".navbar").removeClass("show");
     }
     else {
-        location.href = location.href + "?culture=" + lang;
+        $(".navbar-collapse").addClass("show");
+        $(".navbar").addClass("show");
+    }
+});
+//首页首屏撑满屏幕，其它页面首屏在手机端撑满屏幕
+pageSize();
+$(window).resize(function () {
+    pageSize();
+});
+
+function pageSize() {
+    if ($(document.body).width() <= 450 || $("#homeFri").hasClass("bg8") /*首页*/) {
+        $("#homeFri").css("min-height", $(window).height() - 70);
+    }
+    else {
+        $("#homeFri").css("min-height", "auto");
     }
 }
+
+//中英文之间添加空格
+text_replace(".with-space");

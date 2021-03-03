@@ -1,94 +1,92 @@
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ *
+ * Version: 5.6.1 (2020-11-25)
+ */
 (function () {
-var code = (function () {
-  'use strict';
+    'use strict';
 
-  var PluginManager = tinymce.util.Tools.resolve('tinymce.PluginManager');
+    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
-  var DOMUtils = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
+    var setContent = function (editor, html) {
+      editor.focus();
+      editor.undoManager.transact(function () {
+        editor.setContent(html);
+      });
+      editor.selection.setCursorLocation();
+      editor.nodeChanged();
+    };
+    var getContent = function (editor) {
+      return editor.getContent({ source_view: true });
+    };
 
-  var getMinWidth = function (editor) {
-    return editor.getParam('code_dialog_width', 600);
-  };
-  var getMinHeight = function (editor) {
-    return editor.getParam('code_dialog_height', Math.min(DOMUtils.DOM.getViewPort().h - 200, 500));
-  };
-  var $_7c3dku91jcq86i25 = {
-    getMinWidth: getMinWidth,
-    getMinHeight: getMinHeight
-  };
+    var open = function (editor) {
+      var editorContent = getContent(editor);
+      editor.windowManager.open({
+        title: 'Source Code',
+        size: 'large',
+        body: {
+          type: 'panel',
+          items: [{
+              type: 'textarea',
+              name: 'code'
+            }]
+        },
+        buttons: [
+          {
+            type: 'cancel',
+            name: 'cancel',
+            text: 'Cancel'
+          },
+          {
+            type: 'submit',
+            name: 'save',
+            text: 'Save',
+            primary: true
+          }
+        ],
+        initialData: { code: editorContent },
+        onSubmit: function (api) {
+          setContent(editor, api.getData().code);
+          api.close();
+        }
+      });
+    };
 
-  var setContent = function (editor, html) {
-    editor.focus();
-    editor.undoManager.transact(function () {
-      editor.setContent(html);
-    });
-    editor.selection.setCursorLocation();
-    editor.nodeChanged();
-  };
-  var getContent = function (editor) {
-    return editor.getContent({ source_view: true });
-  };
-  var $_7rbjcx93jcq86i26 = {
-    setContent: setContent,
-    getContent: getContent
-  };
+    var register = function (editor) {
+      editor.addCommand('mceCodeEditor', function () {
+        open(editor);
+      });
+    };
 
-  var open = function (editor) {
-    var minWidth = $_7c3dku91jcq86i25.getMinWidth(editor);
-    var minHeight = $_7c3dku91jcq86i25.getMinHeight(editor);
-    var win = editor.windowManager.open({
-      title: 'Source code',
-      body: {
-        type: 'textbox',
-        name: 'code',
-        multiline: true,
-        minWidth: minWidth,
-        minHeight: minHeight,
-        spellcheck: false,
-        style: 'direction: ltr; text-align: left'
-      },
-      onSubmit: function (e) {
-        $_7rbjcx93jcq86i26.setContent(editor, e.data.code);
-      }
-    });
-    win.find('#code').value($_7rbjcx93jcq86i26.getContent(editor));
-  };
-  var $_alw2xe90jcq86i24 = { open: open };
+    var register$1 = function (editor) {
+      editor.ui.registry.addButton('code', {
+        icon: 'sourcecode',
+        tooltip: 'Source code',
+        onAction: function () {
+          return open(editor);
+        }
+      });
+      editor.ui.registry.addMenuItem('code', {
+        icon: 'sourcecode',
+        text: 'Source code',
+        onAction: function () {
+          return open(editor);
+        }
+      });
+    };
 
-  var register = function (editor) {
-    editor.addCommand('mceCodeEditor', function () {
-      $_alw2xe90jcq86i24.open(editor);
-    });
-  };
-  var $_6iwd6j8zjcq86i23 = { register: register };
+    function Plugin () {
+      global.add('code', function (editor) {
+        register(editor);
+        register$1(editor);
+        return {};
+      });
+    }
 
-  var register$1 = function (editor) {
-    editor.addButton('code', {
-      icon: 'code',
-      tooltip: 'Source code',
-      onclick: function () {
-        $_alw2xe90jcq86i24.open(editor);
-      }
-    });
-    editor.addMenuItem('code', {
-      icon: 'code',
-      text: 'Source code',
-      onclick: function () {
-        $_alw2xe90jcq86i24.open(editor);
-      }
-    });
-  };
-  var $_28lr9v94jcq86i27 = { register: register$1 };
-
-  PluginManager.add('code', function (editor) {
-    $_6iwd6j8zjcq86i23.register(editor);
-    $_28lr9v94jcq86i27.register(editor);
-    return {};
-  });
-  var Plugin = function () {
-  };
-
-  return Plugin;
+    Plugin();
 
 }());
-})()
